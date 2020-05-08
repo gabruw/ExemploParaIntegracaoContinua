@@ -39,3 +39,26 @@ jobs:
       with:
         name: artifact
         path: target/exemplo-1.0.0.jar
+  deploy: 
+    runs-on: ubuntu-latest  
+    needs: build 
+    name: Build do Docker Container e deploy com Kubernetes
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Maven builder
+      uses: actions/download-artifact@v1
+      with:
+        name: artifact
+    - name: Build do Docker Container
+      run: |
+        mkdir -p target
+        mv artifact/exemplo-1.0.0.jar target
+        docker build -t gabruw/exemplo ExemploParaIntegracaoContinua
+    - name: Acessar os secrets
+      env: 
+        SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+      run: echo "Content of secret - $SUPER_SECRET"
+    - name: Push Docker images
+      run: echo "Subindo a imagem do Docker"
+    - name: Deploy application
+      run: echo "Deploying..."
