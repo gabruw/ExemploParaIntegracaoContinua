@@ -1,30 +1,41 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java#apache-maven-with-a-settings-path
+name: Trial Build
 
-name: Maven Package
-
-on:
-  release:
-    types: [created]
+on: [push, pull_request]
 
 jobs:
-  build:
-
+  compile:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        java: [ 1.8, 11, 12, 13 ]
+    name: Java ${{ matrix.java }} compile
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
+      - uses: actions/checkout@master
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - run: mvn -f pom.xml clean compile     
+  build:
+    runs-on: ubuntu-latest
+    needs: compile
+    name: Build projeto do projeto maven
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - name: JDK 8
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+    - name: Build e test do projeto
+      run: mvn -f pom.xml clean verify
+    - name: Atualização das dependências
+      uses: actions/upload-artifact@v1
+      with:
+        name: artifact
+        path: src/target/exemplo-1.0.0.jar
