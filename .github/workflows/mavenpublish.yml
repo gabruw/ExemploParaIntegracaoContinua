@@ -53,7 +53,7 @@ jobs:
       run: |
         mkdir -p target
         mv artifact/exemplo-1.0.0.jar target
-        docker build -t de.gabruw/exemploparaintegracaocontinua exemploparaintegracaocontinua
+        docker build -t de.gabruw
     - name: Acessar os secrets
       env: 
         SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
