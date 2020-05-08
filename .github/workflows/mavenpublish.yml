@@ -61,6 +61,7 @@ jobs:
   sonarcloud:
     runs-on: ubuntu-latest
     needs: deploy
+    name: SonarCloud
     steps:
     - uses: actions/checkout@v2
       with:
