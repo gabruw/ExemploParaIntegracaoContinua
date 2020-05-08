@@ -54,11 +54,17 @@ jobs:
         mkdir -p target
         mv artifact/exemplo-1.0.0.jar target
         docker build -t de.gabruw
-    - name: Acessar os secrets
+    - name: Gerar número da build
       env: 
         SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-      run: echo "Content of secret - $SUPER_SECRET"
-    - name: Push Docker images
-      run: echo "Subindo a imagem do Docker"
-    - name: Deploy application
-      run: echo "Deploying..."
+      run: echo "Build - $SUPER_SECRET"
+  sonarQubeTrigger:
+    name: Análise com SonarQube
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: SonarQube Scan
+      uses: kitabisa/sonarqube-action@master
+      with:
+        host: ${{ secrets.SONARQUBE_HOST }}
+        login: ${{ secrets.SONARQUBE_TOKEN }}
