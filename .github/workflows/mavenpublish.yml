@@ -53,7 +53,7 @@ jobs:
       run: |
         mkdir -p target
         mv artifact/exemplo-1.0.0.jar target
-        docker build -t de.rieckpil.blog/github-actions-sample /
+        docker build -t de.rieckpil.blog/github-actions-sample .
     - name: Gerar número da build
       env: 
         SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
