@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: compile
-    name: Build do projeto maven
+    name: Build
     steps:
     - uses: actions/checkout@v1
     - uses: actions/cache@v1
@@ -49,17 +49,17 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: artifact
-    - name: Build do Docker Container
+    - name: Deploy
       run: |
         mkdir -p target
         mv artifact/exemplo-1.0.0.jar target
-        docker build -t de.gabruw
+        docker build -t de.rieckpil.blog/github-actions-sample github-actions-java-maven
     - name: Gerar número da build
       env: 
         SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
       run: echo "Build - $SUPER_SECRET"
   sonarQubeTrigger:
-    name: Análise com SonarQube
+    name: SonarQube
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
