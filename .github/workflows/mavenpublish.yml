@@ -59,11 +59,12 @@ jobs:
         SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
       run: echo "Build - $SUPER_SECRET"
   sonarQubeTrigger:
-    name: SonarQube
     runs-on: ubuntu-latest
+    needs: deploy 
+    name: SonarQube
     steps:
     - uses: actions/checkout@master
-    - name: SonarQube Scan
+    - name: Scan
       uses: kitabisa/sonarqube-action@master
       with:
         host: ${{ secrets.SONARQUBE_HOST }}
