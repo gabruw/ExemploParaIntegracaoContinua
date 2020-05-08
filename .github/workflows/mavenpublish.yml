@@ -54,10 +54,6 @@ jobs:
         mkdir -p target
         mv artifact/exemplo-1.0.0.jar target
         docker build -t gabruw .
-    - name: Gerar número da build
-      env: 
-        SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-      run: echo "Build - $SUPER_SECRET"
   sonarcloud:
     runs-on: ubuntu-latest
     needs: deploy
